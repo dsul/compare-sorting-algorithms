@@ -65,6 +65,37 @@ def insertion_sort(arr: List[float]) -> List[float]:
     return arr
 
 
+def shellsort(arr: List[float]) -> List[float]:
+    gap_size = 1
+
+    # Using Knuth's increment sequence due to ease of generation.
+    # https://oeis.org/A003462
+    while gap_size < len(arr) // 3:
+        gap_size = 3 * gap_size + 1
+
+    # The final gap size of 1 will perform an insertion sort and guarantee
+    # that the array is sorted.
+    while gap_size >= 1:
+
+        # h-sort the array by the gap size.
+        for i, curr_num in enumerate(arr):
+            prev_elements_ptr = i - gap_size
+
+            # Compare the current element with all previously considered
+            # elements in the current gap sequence, moving the considered
+            # element to the right by the gap size if the current is smaller.
+            while prev_elements_ptr >= 0 and curr_num < arr[prev_elements_ptr]:
+                arr[prev_elements_ptr + gap_size] = arr[prev_elements_ptr]
+                prev_elements_ptr -= gap_size
+
+            # Now set the current element to its h-sorted location.
+            arr[prev_elements_ptr + gap_size] = curr_num
+
+        gap_size //= 3
+
+    return arr
+
+
 # Insertion sort for any subsequence. Helper for other
 # sorting algorithms like mergesort and quicksort.
 def _subsequence_insertion_sort(arr: List[float], lo: int, hi: int) -> None:
