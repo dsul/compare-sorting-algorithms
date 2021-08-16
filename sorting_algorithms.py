@@ -23,41 +23,29 @@ def top_down_mergesort(arr: List[float]) -> List[float]:
         if arr[mid] <= arr[mid + 1]:
             return
 
-        # Copy the values to be merged in a temp array. Alternatively,
-        # iterate over the original array and populate the temp array
-        # with the sorted values, and copy the temp array back in sequence.
-        temp_arr = arr[lo:hi + 1]
-
-        # Initialize the pointers needed to modify the original array.
-        left_half_ptr = lo
-        right_half_ptr = mid + 1
-        original_arr_index = lo
-
-        # If both halves of the array have values left, compare their values
-        # and merge back into the correct place in the original array.
-        while left_half_ptr <= mid and right_half_ptr <= hi:
-            if temp_arr[left_half_ptr - lo] <= temp_arr[right_half_ptr - lo]:
-                arr[original_arr_index] = temp_arr[left_half_ptr - lo]
-                left_half_ptr += 1
-            else:
-                arr[original_arr_index] = temp_arr[right_half_ptr - lo]
-                right_half_ptr += 1
-
-            original_arr_index += 1
-
-        # One half of the array has run out of values, so just merge the
-        # remaining values from the left or right half.
-        while right_half_ptr <= hi:
-            arr[original_arr_index] = temp_arr[right_half_ptr - lo]
-            right_half_ptr += 1
-            original_arr_index += 1
-
-        while left_half_ptr <= mid:
-            arr[original_arr_index] = temp_arr[left_half_ptr - lo]
-            left_half_ptr += 1
-            original_arr_index += 1
+        _merge(arr, lo, mid, hi)
 
     sort(0, len(arr) - 1)
+    return arr
+
+
+def bottom_up_mergesort(arr: List[float]) -> List[float]:
+    arr_length = len(arr)
+    curr_subarray_length = 1
+
+    # Continue until a merge encompasses the entire array.
+    while curr_subarray_length < arr_length:
+
+        # Complete passes of {curr_subarray_len}-by-{curr_subarray_len} merges.
+        for i in range(0, arr_length - curr_subarray_length, curr_subarray_length * 2):
+            mid = (i + curr_subarray_length) - 1
+            hi = min(mid + curr_subarray_length, arr_length - 1)
+            _merge(arr, i, mid, hi)
+
+        # Double the size of the subarrays being merged after
+        # each iteration through the array.
+        curr_subarray_length *= 2
+
     return arr
 
 
@@ -90,3 +78,39 @@ def _subsequence_insertion_sort(arr: List[float], lo: int, hi: int) -> None:
             prev_elements_ptr -= 1
 
         arr[prev_elements_ptr + 1] = current_num
+
+
+def _merge(arr: List[float], lo: int, mid: int, hi: int):
+    # Copy the values to be merged in a temp array. Alternatively,
+    # iterate over the original array and populate the temp array
+    # with the sorted values, and copy the temp array back in sequence.
+    temp_arr = arr[lo:hi + 1]
+
+    # Initialize the pointers needed to modify the original array.
+    left_half_ptr = lo
+    right_half_ptr = mid + 1
+    original_arr_index = lo
+
+    # If both halves of the array have values left, compare their values
+    # and merge back into the correct place in the original array.
+    while left_half_ptr <= mid and right_half_ptr <= hi:
+        if temp_arr[left_half_ptr - lo] <= temp_arr[right_half_ptr - lo]:
+            arr[original_arr_index] = temp_arr[left_half_ptr - lo]
+            left_half_ptr += 1
+        else:
+            arr[original_arr_index] = temp_arr[right_half_ptr - lo]
+            right_half_ptr += 1
+
+        original_arr_index += 1
+
+    # One half of the array has run out of values, so just merge the
+    # remaining values from the left or right half.
+    while right_half_ptr <= hi:
+        arr[original_arr_index] = temp_arr[right_half_ptr - lo]
+        right_half_ptr += 1
+        original_arr_index += 1
+
+    while left_half_ptr <= mid:
+        arr[original_arr_index] = temp_arr[left_half_ptr - lo]
+        left_half_ptr += 1
+        original_arr_index += 1
