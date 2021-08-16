@@ -2,7 +2,8 @@ from typing import List
 
 
 def top_down_mergesort(arr: List[float]) -> List[float]:
-    # Cutoff chosen based on runtime improvement consistency after various tests.
+    # Cutoff chosen based on execution time improvement consistency
+    # after various tests.
     insertion_sort_cutoff = 15
 
     def sort(lo: int, hi: int):
