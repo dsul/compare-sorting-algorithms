@@ -96,6 +96,57 @@ def shellsort(arr: List[float]) -> List[float]:
     return arr
 
 
+def quicksort(arr: List[float]) -> List[float]:
+    def sort(lo: int, hi: int):
+        # Instead of recursing to this base case, you can also opt for
+        # an insertion sort at some cutoff point. I omitted that
+        # potential optimization as I was seeing negligible speed
+        # gains at < 10,000 elements and minor speed losses > 10,000 elements.
+        if lo >= hi:
+            return
+
+        j = _partition(arr, lo, hi)
+        sort(lo, j - 1)
+        sort(j + 1, hi)
+
+    sort(0, len(arr) - 1)
+    return arr
+
+
+def _partition(arr: List[float], lo: int, hi: int) -> int:
+    # One of the most important aspects of quicksort - selecting the pivot.
+    # I am current selecting the first element as the pivot since I am
+    # guaranteeing that the input is randomized and likely void of duplicates.
+    pivot = arr[lo]
+    forward_ptr = lo + 1
+    reverse_ptr = hi
+
+    while True:
+        # Find an element larger than the pivot moving left => right.
+        while arr[forward_ptr] < pivot and forward_ptr < hi:
+            forward_ptr += 1
+
+        # Find an element smaller than the pivot moving right => left.
+        while arr[reverse_ptr] > pivot and reverse_ptr > lo:
+            reverse_ptr -= 1
+
+        # Do not swap the elements when the pointers have crossed.
+        # This means the sorted location for the pivot has been found.
+        if forward_ptr >= reverse_ptr:
+            break
+
+        # Swap the larger elements on the left with the smaller elements
+        # on the right.
+        arr[forward_ptr], arr[reverse_ptr] = arr[reverse_ptr], arr[forward_ptr]
+
+    # Place the pivot located at arr[lo] into its sorted position.
+    arr[lo], arr[reverse_ptr] = arr[reverse_ptr], arr[lo]
+
+    # Return the location of the pivot's final destination as it
+    # acts as the anchor for subsequent partitions.
+    return reverse_ptr
+
+
 # Insertion sort for any subsequence. Helper for other
 # sorting algorithms like mergesort and quicksort.
 def _subsequence_insertion_sort(arr: List[float], lo: int, hi: int) -> None:
