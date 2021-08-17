@@ -24,7 +24,8 @@ The call signature of the script is as follows:
 
 For example, executing `./compare.py top_down_mergesort insertion_sort 3 10000` produces the output:
 
-```Trials: 3
+```
+Trials: 3
 Input Length: 10000
 
 Average Time:
