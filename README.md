@@ -40,7 +40,7 @@ This script runs a simple test suite to ensure the algorithms are correctly sort
 
 The call signature of the script is as follows:
 ```
-./test.py [ sorting_function_name ]
+./test.py [sorting_function_name]
 ```
 For example, executing `./test.py` with no argument produces the output:
 
